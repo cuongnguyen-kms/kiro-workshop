@@ -1,0 +1,21 @@
+{
+  "stage": "infrastructure-design",
+  "unit": "u1-schedule-engine",
+  "upstream_ids": [
+    "NFR3.1", "NFR3.2", "NFR6.1", "NFR6.2", "NFR1.2",
+    "NFR4.1", "NFR4.2", "NFR4.3", "NFR5.1", "NFR7.1", "NFR7.2"
+  ],
+  "coverage": [
+    { "id": "NFR3.1", "status": "N/A", "target": "no authentication in the library, so no infrastructure is needed" },
+    { "id": "NFR3.2", "status": "OK", "target": "cicd-pipeline.md stage 2: build with warnings as errors, including the analyzer rule banning I/O and clock APIs" },
+    { "id": "NFR6.1", "status": "N/A", "target": "input checking is code, so no infrastructure is needed" },
+    { "id": "NFR6.2", "status": "N/A", "target": "entry limit is code, so no infrastructure is needed" },
+    { "id": "NFR1.2", "status": "OK", "target": "cicd-pipeline.md stage 1: restore fetches only the test project's packages" },
+    { "id": "NFR4.1", "status": "N/A", "target": "decimal and DateOnly are code choices, so no infrastructure is needed" },
+    { "id": "NFR4.2", "status": "N/A", "target": "rounding mode is a code choice, so no infrastructure is needed" },
+    { "id": "NFR4.3", "status": "N/A", "target": "immutable records are code, so no infrastructure is needed" },
+    { "id": "NFR5.1", "status": "OK", "target": "cicd-pipeline.md stage 3: the 200 ms performance check runs with the tests" },
+    { "id": "NFR7.1", "status": "OK", "target": "cicd-pipeline.md: library and tests are separate projects built by the solution" },
+    { "id": "NFR7.2", "status": "OK", "target": "cicd-pipeline.md stage 3: dotnet test runs the xUnit project" }
+  ]
+}

@@ -1,0 +1,16 @@
+T:System.IO.File;The schedule engine does no file I/O
+T:System.IO.Directory;The schedule engine does no file I/O
+T:System.IO.FileStream;The schedule engine does no file I/O
+T:System.IO.StreamReader;The schedule engine does no file I/O
+T:System.IO.StreamWriter;The schedule engine does no file I/O
+T:System.Net.Http.HttpClient;The schedule engine does no network I/O
+T:System.Net.Sockets.Socket;The schedule engine does no network I/O
+T:System.Environment;The schedule engine does not read the environment
+T:System.Console;The schedule engine does not use the console
+P:System.DateTime.Now;The schedule engine does not read the clock
+P:System.DateTime.UtcNow;The schedule engine does not read the clock
+P:System.DateTime.Today;The schedule engine does not read the clock
+P:System.DateTimeOffset.Now;The schedule engine does not read the clock
+P:System.DateTimeOffset.UtcNow;The schedule engine does not read the clock
+T:System.TimeProvider;The schedule engine does not read the clock
+T:System.Random;The schedule engine is deterministic

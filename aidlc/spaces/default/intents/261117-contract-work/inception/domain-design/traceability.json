@@ -1,0 +1,14 @@
+{
+  "stage": "domain-design",
+  "upstream_ids": ["US1.1", "US2.1", "US3.1", "US4.1", "US5.1", "US6.1", "US6.2", "US6.3"],
+  "coverage": [
+    { "id": "US1.1", "status": "OK", "target": "ContractWebApp, ContractApi, ContractService, Contract" },
+    { "id": "US2.1", "status": "OK", "target": "ContractWebApp, ContractService, PaymentStream" },
+    { "id": "US3.1", "status": "OK", "target": "ContractWebApp, ContractService, Contract" },
+    { "id": "US4.1", "status": "OK", "target": "ScheduleGenerator, PaymentScheduleEntry" },
+    { "id": "US5.1", "status": "OK", "target": "ScheduleGenerator, ExpenseScheduleEntry" },
+    { "id": "US6.1", "status": "OK", "target": "ContractService, ContractRepository, Contract" },
+    { "id": "US6.2", "status": "OK", "target": "ContractApi, ContractService, ContractRepository, ContractWebApp" },
+    { "id": "US6.3", "status": "OK", "target": "ContractApi, ContractRepository, ContractWebApp" }
+  ]
+}

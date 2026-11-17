@@ -1,0 +1,11 @@
+{
+  "stage": "nfr-design",
+  "unit": "u1-schedule-engine",
+  "upstream_ids": ["NFR3.1", "NFR3.2", "NFR6.1", "NFR6.2"],
+  "coverage": [
+    { "id": "NFR3.1", "status": "OK", "target": "security-design.md: No authentication or authorization; public interface takes only request records" },
+    { "id": "NFR3.2", "status": "OK", "target": "security-design.md: No side effects; build check bans I/O and clock APIs" },
+    { "id": "NFR6.1", "status": "OK", "target": "security-design.md: Input checking; first step of Generate throws ArgumentException" },
+    { "id": "NFR6.2", "status": "OK", "target": "security-design.md: Bounded work; entry count checked against 100000 before building" }
+  ]
+}

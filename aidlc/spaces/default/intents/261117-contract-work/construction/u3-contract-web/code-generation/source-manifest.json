@@ -1,0 +1,1 @@
+{"stage": "code-generation", "unit": "u3-contract-web", "version": 1, "writes": [{"path": "web/"}, {"path": "scripts/verify.ps1"}, {"path": ".gitignore"}]}

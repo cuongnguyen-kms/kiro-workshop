@@ -1,0 +1,20 @@
+{
+  "stage": "code-generation",
+  "unit": "u1-schedule-engine",
+  "version": 1,
+  "writes": [
+    { "path": "ContractManagement.slnx" },
+    { "path": "src/ContractManagement.Scheduling/ContractManagement.Scheduling.csproj" },
+    { "path": "src/ContractManagement.Scheduling/BannedSymbols.txt" },
+    { "path": "src/ContractManagement.Scheduling/Models.cs" },
+    { "path": "src/ContractManagement.Scheduling/PaymentDates.cs" },
+    { "path": "src/ContractManagement.Scheduling/InputChecker.cs" },
+    { "path": "src/ContractManagement.Scheduling/PaymentScheduleBuilder.cs" },
+    { "path": "src/ContractManagement.Scheduling/ExpenseScheduleBuilder.cs" },
+    { "path": "src/ContractManagement.Scheduling/ScheduleGenerator.cs" },
+    { "path": "tests/ContractManagement.Scheduling.Tests/ContractManagement.Scheduling.Tests.csproj" },
+    { "path": "tests/ContractManagement.Scheduling.Tests/ScheduleGeneratorTests.cs" },
+    { "path": "scripts/verify.ps1" },
+    { "path": ".gitignore" }
+  ]
+}
