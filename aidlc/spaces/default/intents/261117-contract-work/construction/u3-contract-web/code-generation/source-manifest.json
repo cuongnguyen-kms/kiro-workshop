@@ -1,1 +1,24 @@
-{"stage": "code-generation", "unit": "u3-contract-web", "version": 1, "writes": [{"path": "web/"}, {"path": "scripts/verify.ps1"}, {"path": ".gitignore"}]}
+{
+  "stage": "code-generation",
+  "unit": "u3-contract-web",
+  "version": 1,
+  "writes": [
+    { "path": "web/public/" },
+    { "path": "web/scripts/" },
+    { "path": "web/src/" },
+    { "path": "web/.env.example" },
+    { "path": "web/.gitignore" },
+    { "path": "web/components.json" },
+    { "path": "web/eslint.config.js" },
+    { "path": "web/index.html" },
+    { "path": "web/package-lock.json" },
+    { "path": "web/package.json" },
+    { "path": "web/README.md" },
+    { "path": "web/tsconfig.app.json" },
+    { "path": "web/tsconfig.json" },
+    { "path": "web/tsconfig.node.json" },
+    { "path": "web/vite.config.ts" },
+    { "path": "scripts/verify.ps1" },
+    { "path": ".gitignore" }
+  ]
+}

@@ -1,6 +1,10 @@
 import '@testing-library/jest-dom/vitest'
-import { cleanup } from '@testing-library/react'
+import { cleanup, configure } from '@testing-library/react'
 import { afterEach, vi } from 'vitest'
+
+// Screens are lazy-loaded, so the first render of a screen waits for its module to transform.
+// This is a wait budget for the test tool, not a product target.
+configure({ asyncUtilTimeout: 15000 })
 
 afterEach(() => {
   cleanup()

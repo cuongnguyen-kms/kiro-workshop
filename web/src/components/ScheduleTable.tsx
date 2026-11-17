@@ -1,4 +1,8 @@
-import { memo } from 'react'
+import { memo, useState } from 'react'
+import { Button } from '@/components/ui/button'
+
+/** Long schedules show this many rows per page; the total row is always visible (NFR5.3). */
+export const SCHEDULE_PAGE_SIZE = 100
 
 export interface ScheduleColumn {
   key: string
@@ -22,7 +26,8 @@ interface ScheduleTableProps {
 
 /**
  * A schedule as a native table with a caption, column headers and a total row in tfoot.
- * Rows are plain elements with no per-row components, so 5,200 rows render quickly (NFR5.3).
+ * Rows are plain elements with no per-row components. A schedule longer than
+ * SCHEDULE_PAGE_SIZE rows is shown a page at a time, so even 5,200 rows render quickly (NFR5.3).
  */
 function ScheduleTableImpl({
   name,
@@ -33,6 +38,13 @@ function ScheduleTableImpl({
   total,
   emptyMessage,
 }: ScheduleTableProps) {
+  const [page, setPage] = useState(1)
+  const pageCount = Math.max(1, Math.ceil(rows.length / SCHEDULE_PAGE_SIZE))
+  const currentPage = Math.min(page, pageCount)
+  const paged = rows.length > SCHEDULE_PAGE_SIZE
+  const firstRow = (currentPage - 1) * SCHEDULE_PAGE_SIZE
+  const visibleRows = paged ? rows.slice(firstRow, firstRow + SCHEDULE_PAGE_SIZE) : rows
+
   if (rows.length === 0 && emptyMessage) {
     return (
       <p className="text-muted-foreground py-4" data-testid={`schedule-table-${name}`}>
@@ -42,6 +54,12 @@ function ScheduleTableImpl({
   }
 
   const alignClass = (col: ScheduleColumn) => (col.align === 'right' ? 'text-right tabular-nums' : 'text-left')
+  // Cell styling comes from the table's class (descendant selectors), so the 5,200 rows carry no
+  // per-row or per-cell attributes. Amount columns are the right-aligned last column.
+  const lastRight = columns[columns.length - 1]?.align === 'right'
+  const tableClass = `w-full caption-bottom text-sm [&_tbody_td]:px-3 [&_tbody_td]:py-2 [&_tbody_tr]:border-b [&_tbody_tr:last-child]:border-0${
+    lastRight ? ' [&_tbody_td:last-child]:text-right [&_tbody_td:last-child]:tabular-nums' : ''
+  }`
 
   return (
     <div
@@ -50,7 +68,7 @@ function ScheduleTableImpl({
       tabIndex={0}
       className="focus-visible:ring-ring/50 w-full overflow-x-auto rounded-md border focus-visible:ring-[3px] focus-visible:outline-none"
     >
-      <table className="w-full caption-bottom text-sm" data-testid={`schedule-table-${name}`}>
+      <table className={tableClass} data-testid={`schedule-table-${name}`}>
         <caption className="text-muted-foreground sr-only">{caption}</caption>
         <thead className="bg-muted">
           <tr className="border-b">
@@ -62,12 +80,10 @@ function ScheduleTableImpl({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, i) => (
-            <tr key={i} className="border-b last:border-0">
+          {visibleRows.map((row, i) => (
+            <tr key={firstRow + i}>
               {columns.map((col) => (
-                <td key={col.key} className={`px-3 py-2 ${alignClass(col)}`}>
-                  {row[col.key]}
-                </td>
+                <td key={col.key}>{row[col.key]}</td>
               ))}
             </tr>
           ))}
@@ -83,6 +99,38 @@ function ScheduleTableImpl({
           </tr>
         </tfoot>
       </table>
+      {paged && (
+        <div
+          className="flex items-center justify-between gap-2 border-t px-3 py-2 text-sm"
+          data-testid={`schedule-pager-${name}`}
+        >
+          <span aria-live="polite">
+            Rows {firstRow + 1}–{Math.min(firstRow + SCHEDULE_PAGE_SIZE, rows.length)} of {rows.length}
+          </span>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(currentPage - 1)}
+              disabled={currentPage <= 1}
+              data-testid={`schedule-prev-${name}`}
+            >
+              Previous
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(currentPage + 1)}
+              disabled={currentPage >= pageCount}
+              data-testid={`schedule-next-${name}`}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

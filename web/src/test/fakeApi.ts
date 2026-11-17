@@ -97,21 +97,21 @@ export const validationResult = (errors: ValidationErrors): CreateContractResult
 })
 
 export const createContract = vi.fn(
-  async (input: CreateContractRequest, _signal?: AbortSignal): Promise<CreateContractResult> => ({
+  async (input: CreateContractRequest): Promise<CreateContractResult> => ({
     kind: 'ok',
     contract: contractFromRequest(input),
   }),
 )
 
 export const listContracts = vi.fn(
-  async (page: number, pageSize: number, _signal?: AbortSignal): Promise<ListContractsResult> => ({
+  async (page: number, pageSize: number): Promise<ListContractsResult> => ({
     kind: 'ok',
     page: contractPage(3, page, pageSize),
   }),
 )
 
 export const getContract = vi.fn(
-  async (id: string, _signal?: AbortSignal): Promise<GetContractResult> =>
+  async (id: string): Promise<GetContractResult> =>
     id === CONTRACT_ID ? { kind: 'ok', contract: sampleContract() } : { kind: 'notFound' },
 )
 

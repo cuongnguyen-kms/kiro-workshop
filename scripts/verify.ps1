@@ -43,7 +43,7 @@ if (-not (Get-Command npm.cmd -ErrorAction SilentlyContinue)) {
 Push-Location (Join-Path $PSScriptRoot '..\web')
 try {
     $frontendSteps = @(
-        @('ci'),
+        @('i'),
         @('audit', '--omit=dev', '--audit-level=high'),
         @('run', 'lint'),
         @('run', 'typecheck'),

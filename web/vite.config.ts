@@ -20,9 +20,29 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
-    include: ['src/**/*.test.{ts,tsx}'],
     css: false,
     // Form tests type many fields; this is the per-test time budget, not a product target.
     testTimeout: 20000,
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['src/**/*.test.{ts,tsx}'],
+          exclude: ['src/**/*.perf.test.{ts,tsx}'],
+          sequence: { groupOrder: 0 },
+        },
+      },
+      {
+        // The NFR5.3 timing test runs on its own after the other tests, so parallel test
+        // files do not compete for the CPU while it measures. The 1-second target is unchanged.
+        extends: true,
+        test: {
+          name: 'performance',
+          include: ['src/**/*.perf.test.{ts,tsx}'],
+          sequence: { groupOrder: 1 },
+        },
+      },
+    ],
   },
 })

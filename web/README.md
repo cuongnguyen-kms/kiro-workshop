@@ -9,7 +9,7 @@ React 19 + TypeScript + Vite frontend for the contract management system, using 
 ## Install
 
 ```
-npm ci
+npm i
 ```
 
 ## Configure
