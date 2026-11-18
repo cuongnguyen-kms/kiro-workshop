@@ -1,0 +1,12 @@
+{
+  "stage": "infrastructure-design",
+  "unit": "u1-schedule-balance",
+  "upstream_ids": ["NFR3.1", "NFR3.3", "NFR1.1", "NFR3.2", "NFR2.1"],
+  "coverage": [
+    { "id": "NFR1.1", "status": "OK", "target": "dotnet test step in scripts/verify.ps1 runs the timing test" },
+    { "id": "NFR2.1", "status": "OK", "target": "dotnet test step runs the existing generator tests" },
+    { "id": "NFR3.1", "status": "N/A", "target": "code-level decimal arithmetic; no infrastructure needed" },
+    { "id": "NFR3.2", "status": "OK", "target": "dotnet test step runs the worked-example tests" },
+    { "id": "NFR3.3", "status": "OK", "target": "dotnet build -warnaserror with the banned-symbols analyzer" }
+  ]
+}

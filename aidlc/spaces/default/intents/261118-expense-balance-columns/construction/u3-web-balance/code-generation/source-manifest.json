@@ -1,0 +1,19 @@
+{
+  "stage": "code-generation",
+  "unit": "u3-web-balance",
+  "version": 1,
+  "writes": [
+    { "path": "web/src/api/types.ts" },
+    { "path": "web/src/components/ScheduleTable.tsx" },
+    { "path": "web/src/contracts/SchedulePreview.tsx" },
+    { "path": "web/src/contracts/ScheduleTabs.tsx" },
+    { "path": "web/src/contracts/display.ts" },
+    { "path": "web/src/contracts/expenseBalance.ts" },
+    { "path": "web/src/test/contractDetail.test.tsx" },
+    { "path": "web/src/test/display.test.ts" },
+    { "path": "web/src/test/expenseBalance.test.tsx" },
+    { "path": "web/src/test/fakeApi.ts" },
+    { "path": "web/src/test/schedule.perf.test.tsx" },
+    { "path": "web/src/test/schedulePreview.test.tsx" }
+  ]
+}

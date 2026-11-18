@@ -1,12 +1,13 @@
 import { useMemo } from 'react'
-import type { ExpenseEntry, ExpenseMethod, PaymentEntry, PaymentStream, Schedule } from '@/api/types'
+import type { ExpenseMethod, ExpenseSchedule, PaymentEntry, PaymentStream, Schedule } from '@/api/types'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScheduleTable, type ScheduleColumn, type ScheduleRow } from '@/components/ScheduleTable'
-import { FREQUENCY_LABELS, formatDate, formatMoney, formatMonth } from '@/contracts/display'
+import { FREQUENCY_LABELS, formatDate, formatMoney } from '@/contracts/display'
+import { EXPENSE_BALANCE_COLUMNS, expenseBalanceRows } from '@/contracts/expenseBalance'
 
 interface ScheduleTabsProps {
   paymentSchedule: Schedule<PaymentEntry>
-  expenseSchedule: Schedule<ExpenseEntry>
+  expenseSchedule: ExpenseSchedule
   expenseMethod: ExpenseMethod
   streams: PaymentStream[]
 }
@@ -16,14 +17,6 @@ export const NO_EXPENSE_MESSAGE = 'This contract has no expense schedule.'
 const PAYMENT_COLUMNS: ScheduleColumn[] = [
   { key: 'dueDate', label: 'Due date' },
   { key: 'stream', label: 'Stream' },
-  { key: 'amount', label: 'Amount', align: 'right' },
-]
-const OVERTIME_COLUMNS: ScheduleColumn[] = [
-  { key: 'month', label: 'Month' },
-  { key: 'amount', label: 'Amount', align: 'right' },
-]
-const ALL_AT_ONCE_COLUMNS: ScheduleColumn[] = [
-  { key: 'date', label: 'Date' },
   { key: 'amount', label: 'Amount', align: 'right' },
 ]
 
@@ -40,15 +33,7 @@ export function paymentRows(entries: PaymentEntry[], streams: PaymentStream[]): 
 /** Payment schedule and Expense schedule tabs; Payment opens first. */
 export function ScheduleTabs({ paymentSchedule, expenseSchedule, expenseMethod, streams }: ScheduleTabsProps) {
   const payment = useMemo(() => paymentRows(paymentSchedule.entries, streams), [paymentSchedule, streams])
-  const expense = useMemo<ScheduleRow[]>(
-    () =>
-      expenseSchedule.entries.map((e): ScheduleRow =>
-        expenseMethod === 'Overtime'
-          ? { month: formatMonth(e.periodStart), amount: formatMoney(e.amount) }
-          : { date: formatDate(e.periodStart), amount: formatMoney(e.amount) },
-      ),
-    [expenseSchedule, expenseMethod],
-  )
+  const expense = useMemo(() => expenseBalanceRows(expenseSchedule.balanceRows), [expenseSchedule.balanceRows])
 
   return (
     <Tabs defaultValue="payment" className="gap-4" data-testid="schedule-tabs">
@@ -78,9 +63,12 @@ export function ScheduleTabs({ paymentSchedule, expenseSchedule, expenseMethod, 
           <ScheduleTable
             name="expense"
             caption="Expense schedule"
-            columns={expenseMethod === 'Overtime' ? OVERTIME_COLUMNS : ALL_AT_ONCE_COLUMNS}
+            columns={EXPENSE_BALANCE_COLUMNS}
             rows={expense}
-            total={formatMoney(expenseSchedule.total)}
+            rowHeader
+            stickyFirstColumn
+            regionLabel="Expense schedule, scrolls sideways"
+            maxHeightClass="max-h-[70vh]"
           />
         )}
       </TabsContent>

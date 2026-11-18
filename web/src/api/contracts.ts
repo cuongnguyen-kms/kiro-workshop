@@ -10,6 +10,10 @@ import type {
   CreateContractResult,
   GetContractResult,
   ListContractsResult,
+  PreviewKind,
+  PreviewRequest,
+  PreviewScheduleResult,
+  SchedulePreview,
   ValidationErrors,
 } from './types'
 
@@ -100,6 +104,35 @@ export async function listContracts(
     return { kind: 'failure' }
   } catch (error) {
     logFailure('listContracts', error)
+    return { kind: 'failure' }
+  }
+}
+
+/** Asks the server for the schedules of the entered values. Stores nothing (FR2.2). */
+export async function previewSchedule(
+  input: PreviewRequest,
+  kind: PreviewKind,
+  signal?: AbortSignal,
+): Promise<PreviewScheduleResult> {
+  try {
+    const response = await send(`/contracts/preview?kind=${kind}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+      signal,
+    })
+    const body = await readJson(response)
+    if (response.status === 200 && isObject(body) && isObject(body.paymentSchedule) && isObject(body.expenseSchedule)) {
+      return { kind: 'ok', preview: body as unknown as SchedulePreview }
+    }
+    if (response.status === 400) {
+      const errors = readValidationErrors(body)
+      if (errors) return { kind: 'validation', errors }
+    }
+    logFailure('previewSchedule', new Error(`Unexpected status ${response.status}`))
+    return { kind: 'failure' }
+  } catch (error) {
+    logFailure('previewSchedule', error)
     return { kind: 'failure' }
   }
 }

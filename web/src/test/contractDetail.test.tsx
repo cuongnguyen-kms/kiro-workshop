@@ -17,7 +17,7 @@ describe('Contract detail', () => {
 
     const streams = screen.getByTestId('streams-summary')
     expect(within(streams).getByText('Monthly')).toBeInTheDocument()
-    expect(within(streams).getByText('1000.00')).toBeInTheDocument()
+    expect(within(streams).getByText('1,000.00')).toBeInTheDocument()
     expect(within(streams).getByText('2027-01-15 to 2027-12-15')).toBeInTheDocument()
 
     // The Payment schedule opens first.
@@ -30,15 +30,27 @@ describe('Contract detail', () => {
     ])
     const bodyRows = payment.querySelectorAll('tbody tr')
     expect(bodyRows).toHaveLength(12)
-    expect(bodyRows[0]).toHaveTextContent('2027-01-15Monthly 1000.001000.00')
-    expect(screen.getByTestId('schedule-total-payment')).toHaveTextContent('12000.00')
+    expect(bodyRows[0]).toHaveTextContent('2027-01-15Monthly 1,000.001,000.00')
+    expect(screen.getByTestId('schedule-total-payment')).toHaveTextContent('12,000.00')
 
     await user.click(screen.getByTestId('tab-expense'))
     const expense = await screen.findByTestId('schedule-table-expense')
-    expect(within(expense).getAllByRole('columnheader').map((h) => h.textContent)).toEqual(['Date', 'Amount'])
+    expect(within(expense).getAllByRole('columnheader').map((h) => h.textContent)).toEqual([
+      'Period',
+      'Expense',
+      '(Accrual)/Prepaid',
+      'Cumulative Balance',
+      'ST Accrued Liability',
+      'LT Accrued Liability',
+      'ST Prepaid Asset',
+      'LT Prepaid Asset',
+    ])
     expect(expense.querySelectorAll('tbody tr')).toHaveLength(1)
-    expect(expense.querySelector('tbody tr')).toHaveTextContent('2027-03-0112000.00')
-    expect(screen.getByTestId('schedule-total-expense')).toHaveTextContent('12000.00')
+    expect(expense.querySelector('tbody tr')).toHaveTextContent(
+      'Mar 202712,000.00(9,000.00)(9,000.00)9,000.000.000.000.00',
+    )
+    expect(expense.querySelector('tfoot')).toBeNull()
+    expect(screen.queryByTestId('schedule-total-expense')).not.toBeInTheDocument()
   })
 
   it('shows "Contract not found." for an unknown contract (AC6.2.2)', async () => {
@@ -52,7 +64,7 @@ describe('Contract detail', () => {
       kind: 'ok',
       contract: fake.sampleContract({
         expense: { method: 'None' },
-        expenseSchedule: { entries: [], total: 0 },
+        expenseSchedule: { entries: [], total: 0, balanceRows: [] },
       }),
     })
     const { user } = renderAt(`/contracts/${fake.CONTRACT_ID}`)

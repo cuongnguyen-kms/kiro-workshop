@@ -1,0 +1,15 @@
+{
+  "stage": "infrastructure-design",
+  "unit": "u3-web-balance",
+  "upstream_ids": ["NFR1.2","NFR1.1","NFR1.3","NFR3.1","NFR3.2","NFR4.1","NFR4.3","NFR2.1"],
+  "coverage": [
+    { "id": "NFR1.1", "status": "OK", "target": "npm test step runs the lenient render timing test" },
+    { "id": "NFR1.2", "status": "N/A", "target": "code-level memoisation; no infrastructure needed" },
+    { "id": "NFR1.3", "status": "OK", "target": "npm run size step, 300 KB gzip limit" },
+    { "id": "NFR2.1", "status": "OK", "target": "npm run typecheck and npm test steps against the C1 v1.1.0 types and fake API" },
+    { "id": "NFR3.1", "status": "OK", "target": "npm test step runs the formatter tests" },
+    { "id": "NFR3.2", "status": "OK", "target": "npm test step runs the tab value tests" },
+    { "id": "NFR4.1", "status": "OK", "target": "npm test step runs vitest-axe on tab and popup" },
+    { "id": "NFR4.3", "status": "OK", "target": "class assertions in npm test plus the manual browser check" }
+  ]
+}

@@ -239,4 +239,22 @@ public class ScheduleGeneratorTests
         Assert.True(r.Payments.Count > 5000);
         Assert.True(sw.ElapsedMilliseconds < 200, $"Took {sw.ElapsedMilliseconds} ms");
     }
+
+    // BR3.1: Generate returns the balance rows the builder makes from its own rows
+    [Fact]
+    public void Generate_Overtime_BalanceEqualsBuilderOutput()
+    {
+        var r = Run(new ExpenseInput(ExpenseMethod.Overtime, D(2027, 1, 1), D(2027, 12, 31), null),
+            Stream(Frequency.OneTime, D(2027, 1, 15), D(2027, 1, 15), 12000m));
+        Assert.Equal(12, r.Balance.Count);
+        Assert.Equal(new BalanceScheduleBuilder().Build(r.Payments, r.Expenses), r.Balance);
+    }
+
+    // FR1.4: method None gives no balance rows
+    [Fact]
+    public void Generate_MethodNone_BalanceIsEmpty()
+    {
+        var r = Run(NoExpense, Stream(Frequency.OneTime, D(2027, 1, 15), D(2027, 1, 15), 500m));
+        Assert.Empty(r.Balance);
+    }
 }

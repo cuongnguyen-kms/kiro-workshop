@@ -1,7 +1,7 @@
 // The form model and its validation rules (functional-spec.md, "Form Model" and "Validation Messages").
 // The client check is a convenience; the API checks everything again and its answer wins.
 import { z } from 'zod'
-import type { CreateContractRequest, ExpenseMethod, Frequency } from '@/api/types'
+import type { CreateContractRequest, ExpenseMethod, Frequency, PreviewKind, PreviewRequest } from '@/api/types'
 
 /** The six messages from the functional spec, worded exactly as the API returns them. */
 export const MESSAGES = {
@@ -184,6 +184,46 @@ export function toCreateRequest(values: ContractFormValues): CreateContractReque
           ? { method: 'AllAtOnce', date: expense.date }
           : { method: 'None' },
   }
+}
+
+/**
+ * Builds the preview request (C1 preview). The name is not sent. A payment preview sends no expense
+ * fields, so an unfinished expense never matters to it (FR2.3).
+ */
+export function toPreviewRequest(values: ContractFormValues, kind: PreviewKind): PreviewRequest {
+  const { name: _name, ...rest } = toCreateRequest(values)
+  void _name
+  return kind === 'payment' ? { ...rest, expense: { method: 'None' } } : rest
+}
+
+export const PREVIEW_MESSAGES = {
+  payments: 'Enter valid contract dates and payment streams to preview.',
+  expense: 'Enter valid contract dates, payment streams and expense details to preview.',
+  noExpense: 'This contract has no expense schedule.',
+} as const
+
+// Previews never need the name, so its issue is left out (FR2.4).
+const issuesIgnoringName = (values: ContractFormValues) => checkContract(values).filter((i) => i.path[0] !== 'name')
+
+/** True when contract dates and every stream pass the form rules; name and expense are not needed (FR1.2). */
+export function canPreviewPayments(values: ContractFormValues): boolean {
+  return issuesIgnoringName(values).every((i) => i.path[0] === 'expense')
+}
+
+/** True when the expense method is not None and dates, streams and expense all pass (FR1.3). */
+export function canPreviewExpense(values: ContractFormValues): boolean {
+  return values.expense.method !== 'None' && issuesIgnoringName(values).length === 0
+}
+
+/** Why the payment button is disabled, or undefined when it is enabled (FR1.5). */
+export function paymentPreviewReason(values: ContractFormValues): string | undefined {
+  return canPreviewPayments(values) ? undefined : PREVIEW_MESSAGES.payments
+}
+
+/** Why the expense button is disabled, or undefined when it is enabled (FR1.4, FR1.5). */
+export function expensePreviewReason(values: ContractFormValues): string | undefined {
+  if (values.expense.method === 'None') return PREVIEW_MESSAGES.noExpense
+  return canPreviewExpense(values) ? undefined : PREVIEW_MESSAGES.expense
 }
 
 /** Converts an API error key such as paymentStreams[0].amount to the form path paymentStreams.0.amount. */

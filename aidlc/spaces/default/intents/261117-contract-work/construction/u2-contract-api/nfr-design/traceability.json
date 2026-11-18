@@ -1,0 +1,33 @@
+{
+  "stage": "nfr-design",
+  "unit": "u2-contract-api",
+  "upstream_ids": ["NFR5.1","NFR5.2","NFR5.3","NFR5.4","NFR5.5","NFR3.1","NFR3.2","NFR6.1","NFR6.2","NFR6.3","NFR6.4","NFR6.5","NFR6.6","NFR2.1","NFR2.2","NFR5.6","NFR5.7","NFR5.8","NFR5.9","NFR4.1","NFR4.2","NFR4.3","NFR4.4","NFR4.5","NFR4.6","NFR4.7"],
+  "coverage": [
+    { "id": "NFR5.1", "status": "OK", "target": "performance-design.md: batched single-transaction save, pooled connections, create budget" },
+    { "id": "NFR5.2", "status": "OK", "target": "performance-design.md: batched writes and constant-time size check" },
+    { "id": "NFR5.3", "status": "OK", "target": "performance-design.md: split read queries without tracking" },
+    { "id": "NFR5.4", "status": "OK", "target": "performance-design.md: paged list with covering sort index" },
+    { "id": "NFR5.5", "status": "OK", "target": "performance-design.md: constant-time size check" },
+    { "id": "NFR3.1", "status": "OK", "target": "security-design.md: open access" },
+    { "id": "NFR3.2", "status": "OK", "target": "security-design.md: single route group ready for authorization" },
+    { "id": "NFR6.1", "status": "OK", "target": "security-design.md: server-side validators" },
+    { "id": "NFR6.2", "status": "OK", "target": "security-design.md: parameterized queries through EF Core" },
+    { "id": "NFR6.3", "status": "OK", "target": "security-design.md: 256 KB body limit" },
+    { "id": "NFR6.4", "status": "OK", "target": "security-design.md: generic exception handler and security headers" },
+    { "id": "NFR6.5", "status": "OK", "target": "security-design.md: HTTPS redirection and HSTS outside Development" },
+    { "id": "NFR6.6", "status": "OK", "target": "security-design.md: single-origin CORS policy" },
+    { "id": "NFR2.1", "status": "OK", "target": "security-design.md: secrets from user secrets or environment" },
+    { "id": "NFR2.2", "status": "OK", "target": "security-design.md: limited database account outside development" },
+    { "id": "NFR5.6", "status": "OK", "target": "scalability-design.md: data growth and indexes" },
+    { "id": "NFR5.7", "status": "OK", "target": "scalability-design.md: per-request transactions, application-generated ids" },
+    { "id": "NFR5.8", "status": "OK", "target": "scalability-design.md: stateless, vertical scaling" },
+    { "id": "NFR5.9", "status": "OK", "target": "scalability-design.md: index list" },
+    { "id": "NFR4.1", "status": "OK", "target": "reliability-design.md: explicit transaction and failure injection test" },
+    { "id": "NFR4.2", "status": "OK", "target": "reliability-design.md: deterministic schedules from U1" },
+    { "id": "NFR4.3", "status": "OK", "target": "reliability-design.md: decimal and numeric(18,2)" },
+    { "id": "NFR4.4", "status": "OK", "target": "reliability-design.md: 500 handler, no server retry" },
+    { "id": "NFR4.5", "status": "OK", "target": "reliability-design.md: startup check without password in logs" },
+    { "id": "NFR4.6", "status": "OK", "target": "reliability-design.md: backup left to the database owner" },
+    { "id": "NFR4.7", "status": "OK", "target": "reliability-design.md: /health endpoint" }
+  ]
+}

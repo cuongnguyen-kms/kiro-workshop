@@ -19,7 +19,7 @@ describe('Schedule rendering performance', () => {
     }))
     const props = {
       paymentSchedule: { entries, total: 52000 },
-      expenseSchedule: { entries: [], total: 0 },
+      expenseSchedule: { entries: [], total: 0, balanceRows: [] },
       expenseMethod: 'None' as const,
       streams: [{ id: STREAM_ID, amount: 10, frequency: 'Weekly' as const, startDate: '2027-01-01', endDate: '2127-01-01' }],
     }
@@ -32,7 +32,7 @@ describe('Schedule rendering performance', () => {
     const table = screen.getByTestId('schedule-table-payment')
     expect(table.querySelectorAll('tbody tr')).toHaveLength(SCHEDULE_PAGE_SIZE)
     expect(screen.getByTestId('schedule-pager-payment')).toHaveTextContent(`Rows 1–100 of ${ROWS}`)
-    expect(screen.getByTestId('schedule-total-payment')).toHaveTextContent('52000.00')
+    expect(screen.getByTestId('schedule-total-payment')).toHaveTextContent('52,000.00')
     console.info(`5,200-row payment schedule rendered in ${elapsed.toFixed(0)} ms`)
     expect(elapsed).toBeLessThan(LIMIT_MS)
   })
@@ -47,7 +47,7 @@ describe('Schedule rendering performance', () => {
     render(
       <ScheduleTabs
         paymentSchedule={{ entries, total: 31375 }}
-        expenseSchedule={{ entries: [], total: 0 }}
+        expenseSchedule={{ entries: [], total: 0, balanceRows: [] }}
         expenseMethod="None"
         streams={[{ id: STREAM_ID, amount: 1, frequency: 'Weekly', startDate: '2027-01-01', endDate: '2032-01-01' }]}
       />,
@@ -61,6 +61,6 @@ describe('Schedule rendering performance', () => {
     expect(pager).toHaveTextContent('Rows 201–250 of 250')
     expect(screen.getByTestId('schedule-table-payment').querySelectorAll('tbody tr')).toHaveLength(50)
     expect(screen.getByTestId('schedule-next-payment')).toBeDisabled()
-    expect(screen.getByTestId('schedule-total-payment')).toHaveTextContent('31375.00')
+    expect(screen.getByTestId('schedule-total-payment')).toHaveTextContent('31,375.00')
   })
 })

@@ -4,7 +4,23 @@
     "slug": "contract-work",
     "dirName": "261117-contract-work",
     "scope": "classic",
-    "status": "in-flight",
+    "status": "complete",
     "request": "7988b2f0"
+  },
+  {
+    "uuid": "01a1ec6c-1dec-7912-bca0-37941d45c159",
+    "slug": "schedule-preview",
+    "dirName": "261118-schedule-preview",
+    "scope": "express",
+    "status": "complete",
+    "request": "e8392e06"
+  },
+  {
+    "uuid": "01a1eca2-6f2c-7c31-8474-7fa0303936db",
+    "slug": "expense-balance-columns",
+    "dirName": "261118-expense-balance-columns",
+    "scope": "classic",
+    "status": "in-flight",
+    "request": "cb19fde5"
   }
 ]

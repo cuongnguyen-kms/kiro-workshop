@@ -65,9 +65,35 @@ public sealed record ExpenseEntry(DateOnly PeriodStart, DateOnly PeriodEnd, deci
 /// <param name="PaymentTotal">Sum of all payment amounts.</param>
 /// <param name="Expenses">Expense rows ordered by period start.</param>
 /// <param name="ExpenseTotal">Sum of all expense amounts.</param>
+/// <param name="Balance">Monthly expense balance rows; empty when there are no expense rows.</param>
 public sealed record ScheduleResult(
     IReadOnlyList<PaymentEntry> Payments, decimal PaymentTotal,
-    IReadOnlyList<ExpenseEntry> Expenses, decimal ExpenseTotal);
+    IReadOnlyList<ExpenseEntry> Expenses, decimal ExpenseTotal,
+    IReadOnlyList<BalanceRow> Balance);
+
+/// <summary>One calendar month of the expense balance schedule (calculated, never stored).</summary>
+/// <param name="PeriodStart">First day of the month, or the Overtime row's period start.</param>
+/// <param name="PeriodEnd">Last day of the month, or the Overtime row's period end.</param>
+/// <param name="Expense">Expense of the month; 0 for a payment-only month.</param>
+/// <param name="AccrualPrepaid">Payments due in the month minus expense; positive is prepaid, negative is accrued.</param>
+/// <param name="CumulativeBalance">Running total of AccrualPrepaid; 0 on the last row.</param>
+/// <param name="StAccruedLiability">Short-term accrued liability (reverses within 12 months); never negative.</param>
+/// <param name="LtAccruedLiability">Long-term accrued liability; never negative.</param>
+/// <param name="StPrepaidAsset">Short-term prepaid asset; never negative.</param>
+/// <param name="LtPrepaidAsset">Long-term prepaid asset; never negative.</param>
+public sealed record BalanceRow(
+    DateOnly PeriodStart, DateOnly PeriodEnd, decimal Expense, decimal AccrualPrepaid,
+    decimal CumulativeBalance, decimal StAccruedLiability, decimal LtAccruedLiability,
+    decimal StPrepaidAsset, decimal LtPrepaidAsset);
+
+/// <summary>Contract C2: builds the monthly balance rows from payment and expense rows.</summary>
+public interface IBalanceScheduleBuilder
+{
+    /// <summary>Pure and deterministic. Returns no rows when <paramref name="expenses"/> is empty.</summary>
+    /// <exception cref="ArgumentNullException">A list is null.</exception>
+    /// <exception cref="ArgumentException">Expense rows exist and the payment and expense totals differ.</exception>
+    IReadOnlyList<BalanceRow> Build(IReadOnlyList<PaymentEntry> payments, IReadOnlyList<ExpenseEntry> expenses);
+}
 
 /// <summary>Contract C2: the schedule engine.</summary>
 public interface IScheduleGenerator

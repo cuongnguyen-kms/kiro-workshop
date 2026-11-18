@@ -21,6 +21,7 @@ import { DateField } from '@/components/DateField'
 import { ErrorSummary, type ErrorSummaryItem } from '@/components/ErrorSummary'
 import { FieldError } from '@/components/FieldError'
 import { ExpenseSection } from '@/contracts/ExpenseSection'
+import { SchedulePreview } from '@/contracts/SchedulePreview'
 import { StreamCard } from '@/contracts/StreamCard'
 import {
   NAME_MAX_LENGTH,
@@ -234,14 +235,17 @@ export function ContractForm({ status, apiErrors, onSubmit, onCancel }: Contract
           <ExpenseSection readOnly={saving} />
         </Section>
 
-        <div className="flex justify-end gap-3">
-          <Button type="button" variant="outline" onClick={cancel} disabled={saving} data-testid="cancel-contract">
-            Cancel
-          </Button>
-          <Button type="submit" disabled={saving} data-testid="save-contract">
-            {saving && <Loader2 aria-hidden="true" className="animate-spin" />}
-            {saving ? 'Saving…' : 'Save contract'}
-          </Button>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <SchedulePreview values={values} />
+          <div className="flex gap-3">
+            <Button type="button" variant="outline" onClick={cancel} disabled={saving} data-testid="cancel-contract">
+              Cancel
+            </Button>
+            <Button type="submit" disabled={saving} data-testid="save-contract">
+              {saving && <Loader2 aria-hidden="true" className="animate-spin" />}
+              {saving ? 'Saving…' : 'Save contract'}
+            </Button>
+          </div>
         </div>
       </form>
 

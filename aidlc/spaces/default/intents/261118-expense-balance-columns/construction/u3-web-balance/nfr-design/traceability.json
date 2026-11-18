@@ -1,0 +1,16 @@
+{
+  "stage": "nfr-design",
+  "unit": "u3-web-balance",
+  "upstream_ids": ["NFR1.1","NFR1.2","NFR1.3","NFR2.1","NFR3.1","NFR3.2","NFR4.1","NFR4.2","NFR4.3"],
+  "coverage": [
+    { "id": "NFR1.1", "status": "OK", "target": "Existing 100-row pager, cheap string formatter, lenient 200 ms jsdom render test" },
+    { "id": "NFR1.2", "status": "OK", "target": "Pure expenseBalanceRows in useMemo; plain tr rows with table-level classes" },
+    { "id": "NFR1.3", "status": "OK", "target": "No new packages; npm run size" },
+    { "id": "NFR2.1", "status": "OK", "target": "Additive BalanceRow and ExpenseSchedule types; missing balanceRows treated as empty" },
+    { "id": "NFR3.1", "status": "OK", "target": "toFixed(10) then digit-string half-away-from-zero rounding, commas, brackets, 0.00 for zero" },
+    { "id": "NFR3.2", "status": "OK", "target": "Formatter changes only presentation; tab test compares cells to fake API values" },
+    { "id": "NFR4.1", "status": "OK", "target": "th scope=col headers, th scope=row Period cells, vitest-axe on tab and popup" },
+    { "id": "NFR4.2", "status": "OK", "target": "Focusable region with role=region and a label distinct from the hidden caption" },
+    { "id": "NFR4.3", "status": "OK", "target": "Height-limited overflow-auto region with sticky header and first column; pager outside; person checks by eye" }
+  ]
+}

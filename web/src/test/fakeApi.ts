@@ -4,6 +4,7 @@
 // and check how often it was called.
 import { vi } from 'vitest'
 import type {
+  BalanceRow,
   ContractDetail,
   ContractPage,
   ContractSummary,
@@ -12,11 +13,55 @@ import type {
   GetContractResult,
   ListContractsResult,
   PaymentEntry,
+  PreviewKind,
+  PreviewRequest,
+  PreviewScheduleResult,
   ValidationErrors,
 } from '@/api/types'
 
 export const CONTRACT_ID = '3f1c2b7a-8d4e-4f6a-9b1c-2d3e4f5a6b7c'
 export const STREAM_ID = '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d'
+
+/** The first two C1 v1.1.0 example rows: 12,000.00 paid on 2027-01-15, Overtime expense of 1,000.00 a month. */
+export const OVERTIME_BALANCE_ROWS: BalanceRow[] = [
+  {
+    periodStart: '2027-01-01',
+    periodEnd: '2027-01-31',
+    expense: 1000,
+    accrualPrepaid: 11000,
+    cumulativeBalance: 11000,
+    stAccruedLiability: 0,
+    ltAccruedLiability: 0,
+    stPrepaidAsset: 11000,
+    ltPrepaidAsset: 0,
+  },
+  {
+    periodStart: '2027-02-01',
+    periodEnd: '2027-02-28',
+    expense: 1000,
+    accrualPrepaid: -1000,
+    cumulativeBalance: 10000,
+    stAccruedLiability: 0,
+    ltAccruedLiability: 0,
+    stPrepaidAsset: 10000,
+    ltPrepaidAsset: 0,
+  },
+]
+
+/** The one balance row of the sample All at once contract: 12,000.00 on 2027-03-01 after three 1,000.00 payments. */
+export const ALL_AT_ONCE_BALANCE_ROWS: BalanceRow[] = [
+  {
+    periodStart: '2027-03-01',
+    periodEnd: '2027-03-01',
+    expense: 12000,
+    accrualPrepaid: -9000,
+    cumulativeBalance: -9000,
+    stAccruedLiability: 9000,
+    ltAccruedLiability: 0,
+    stPrepaidAsset: 0,
+    ltPrepaidAsset: 0,
+  },
+]
 
 /** A saved contract from the stories: a Monthly stream of 1000 and an AllAtOnce expense on 2027-03-01. */
 export function sampleContract(overrides: Partial<ContractDetail> = {}): ContractDetail {
@@ -38,6 +83,7 @@ export function sampleContract(overrides: Partial<ContractDetail> = {}): Contrac
     expenseSchedule: {
       entries: [{ periodStart: '2027-03-01', periodEnd: '2027-03-01', amount: 12000 }],
       total: 12000,
+      balanceRows: ALL_AT_ONCE_BALANCE_ROWS,
     },
     ...overrides,
   }
@@ -63,7 +109,7 @@ export function contractFromRequest(request: CreateContractRequest): ContractDet
       entries: streams.map((s) => ({ streamId: s.id, dueDate: s.startDate, amount: s.amount })),
       total: streams.reduce((sum, s) => sum + s.amount, 0),
     },
-    expenseSchedule: { entries: [], total: 0 },
+    expenseSchedule: { entries: [], total: 0, balanceRows: [] },
   }
 }
 
@@ -121,9 +167,46 @@ const defaults = {
   getContract: getContract.getMockImplementation()!,
 }
 
+/** The C1 answer to POST /contracts/preview: the first payment row of each stream and no expense rows. */
+export const previewSchedule = vi.fn(
+  async (input: PreviewRequest, kind: PreviewKind): Promise<PreviewScheduleResult> => {
+    void kind
+    const entries = input.paymentStreams.map((s, i) => ({ streamNumber: i + 1, dueDate: s.startDate, amount: s.amount }))
+    const total = entries.reduce((sum, e) => sum + e.amount, 0)
+    return {
+      kind: 'ok',
+      preview: {
+        paymentSchedule: { entries, total },
+        expenseSchedule:
+          input.expense.method === 'None'
+            ? { entries: [], total: 0, balanceRows: [] }
+            : {
+                entries: [{ periodStart: input.expense.startDate ?? input.expense.date ?? '', periodEnd: input.expense.endDate ?? input.expense.date ?? '', amount: total }],
+                total,
+                balanceRows: [
+                  {
+                    periodStart: input.expense.startDate ?? input.expense.date ?? '',
+                    periodEnd: input.expense.endDate ?? input.expense.date ?? '',
+                    expense: total,
+                    accrualPrepaid: 0,
+                    cumulativeBalance: 0,
+                    stAccruedLiability: 0,
+                    ltAccruedLiability: 0,
+                    stPrepaidAsset: 0,
+                    ltPrepaidAsset: 0,
+                  },
+                ],
+              },
+      },
+    }
+  },
+)
+const previewDefault = previewSchedule.getMockImplementation()!
+
 /** Puts every fake back to its C1 default answer and clears the call history. */
 export function resetFakeApi(): void {
   createContract.mockReset().mockImplementation(defaults.createContract)
   listContracts.mockReset().mockImplementation(defaults.listContracts)
   getContract.mockReset().mockImplementation(defaults.getContract)
+  previewSchedule.mockReset().mockImplementation(previewDefault)
 }

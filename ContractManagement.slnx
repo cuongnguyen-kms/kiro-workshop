@@ -1,8 +1,11 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/ContractManagement.Api/ContractManagement.Api.csproj" />
     <Project Path="src/ContractManagement.Scheduling/ContractManagement.Scheduling.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/ContractManagement.Api.IntegrationTests/ContractManagement.Api.IntegrationTests.csproj" />
+    <Project Path="tests/ContractManagement.Api.Tests/ContractManagement.Api.Tests.csproj" />
     <Project Path="tests/ContractManagement.Scheduling.Tests/ContractManagement.Scheduling.Tests.csproj" />
   </Folder>
 </Solution>

@@ -57,6 +57,24 @@ export interface Schedule<T> {
   total: number
 }
 
+/** One month of the expense balance table (C1 v1.1.0). Amounts are signed where negative means accrual. */
+export interface BalanceRow {
+  periodStart: string
+  periodEnd: string
+  expense: number
+  accrualPrepaid: number
+  cumulativeBalance: number
+  stAccruedLiability: number
+  ltAccruedLiability: number
+  stPrepaidAsset: number
+  ltPrepaidAsset: number
+}
+
+/** The expense schedule: the v1.0 entries and total plus the monthly balance rows (C1 v1.1.0). */
+export interface ExpenseSchedule extends Schedule<ExpenseEntry> {
+  balanceRows: BalanceRow[]
+}
+
 export interface ContractDetail {
   id: string
   name: string
@@ -65,7 +83,7 @@ export interface ContractDetail {
   paymentStreams: PaymentStream[]
   expense: ExpenseInput
   paymentSchedule: Schedule<PaymentEntry>
-  expenseSchedule: Schedule<ExpenseEntry>
+  expenseSchedule: ExpenseSchedule
 }
 
 export interface ContractSummary {
@@ -111,3 +129,26 @@ export type GetContractResult =
   | { kind: 'failure' }
 
 export type ListContractsResult = { kind: 'ok'; page: ContractPage } | { kind: 'failure' }
+
+/** Which schedule a preview is for. A payment preview ignores the expense fields. */
+export type PreviewKind = 'payment' | 'expense'
+
+/** The preview request: a create request without the name, which a preview does not need. */
+export type PreviewRequest = Omit<CreateContractRequest, 'name'>
+
+/** One previewed payment row; streamNumber is the 1-based position of the stream in the form. */
+export interface PreviewPaymentEntry {
+  streamNumber: number
+  dueDate: string
+  amount: number
+}
+
+export interface SchedulePreview {
+  paymentSchedule: Schedule<PreviewPaymentEntry>
+  expenseSchedule: ExpenseSchedule
+}
+
+export type PreviewScheduleResult =
+  | { kind: 'ok'; preview: SchedulePreview }
+  | { kind: 'validation'; errors: ValidationErrors }
+  | { kind: 'failure' }

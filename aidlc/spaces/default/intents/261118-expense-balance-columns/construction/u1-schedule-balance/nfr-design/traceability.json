@@ -1,0 +1,12 @@
+{
+  "stage": "nfr-design",
+  "unit": "u1-schedule-balance",
+  "upstream_ids": ["NFR1.1", "NFR2.1", "NFR3.1", "NFR3.2", "NFR3.3"],
+  "coverage": [
+    { "id": "NFR1.1", "status": "OK", "target": "Sorted month grouping and binary-search look-ahead, O(n log n); warm-up plus best-of-3 timing test under 50 ms" },
+    { "id": "NFR2.1", "status": "OK", "target": "ScheduleResult gains Balance; payment and expense lists built first and unchanged" },
+    { "id": "NFR3.1", "status": "OK", "target": "decimal-only arithmetic, no rounding; ST and LT from absolute values per BR2.4" },
+    { "id": "NFR3.2", "status": "OK", "target": "One xUnit test per worked example E1 to E10, per BR2.4 branch and per BR2.5 sign" },
+    { "id": "NFR3.3", "status": "OK", "target": "Pure builder with no clock, random, culture or I/O; repeat-call equality test" }
+  ]
+}

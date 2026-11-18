@@ -1,0 +1,12 @@
+{
+  "stage": "domain-design",
+  "upstream_ids": ["US3.1","US1.1","US2.1","US2.2","US2.3","US4.1"],
+  "coverage": [
+    { "id": "US1.1", "status": "OK", "target": "ScheduleGenerator" },
+    { "id": "US2.1", "status": "OK", "target": "ScheduleGenerator, ContractService" },
+    { "id": "US2.2", "status": "OK", "target": "ScheduleGenerator" },
+    { "id": "US2.3", "status": "OK", "target": "ContractWebApp" },
+    { "id": "US3.1", "status": "OK", "target": "ContractWebApp" },
+    { "id": "US4.1", "status": "OK", "target": "ContractWebApp, ContractService" }
+  ]
+}
